@@ -46,6 +46,7 @@ public class RecordingListActivity extends AppCompatActivity {
         textViewNoRecordings = (TextView) findViewById(R.id.textViewNoRecordings);
 
     }
+
     private void fetchRecordings() {
 
         File root = android.os.Environment.getExternalStorageDirectory();
@@ -76,10 +77,12 @@ public class RecordingListActivity extends AppCompatActivity {
         }
 
     }
+
     private void setAdaptertoRecyclerView() {
         recordingAdapter = new RecordingAdapter(this,recordingArraylist);
         recyclerViewRecordings.setAdapter(recordingAdapter);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 

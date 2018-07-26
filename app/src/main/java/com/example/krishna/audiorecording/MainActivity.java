@@ -55,29 +55,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.list_menu,menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-            case R.id.item_list:
-                Intent intent = new Intent(this, RecordingListActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-
-        }
-
-    }
     private void initViews() {
 
         /** setting up the toolbar  **/
@@ -94,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageViewPlay = (ImageView) findViewById(R.id.imageViewPlay);
         linearLayoutPlay = (LinearLayout) findViewById(R.id.linearLayoutPlay);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
+
 
         imageViewRecord.setOnClickListener(this);
         imageViewStop.setOnClickListener(this);
@@ -146,9 +124,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+
     @Override
     public void onClick(View view) {
-
         if( view == imageViewRecord ){
             prepareforRecording();
             startRecording();
@@ -166,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
     private void prepareforRecording() {
         TransitionManager.beginDelayedTransition(linearLayoutRecorder);
         imageViewRecord.setVisibility(View.GONE);
@@ -179,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        /**In the lines below, we create a directory VoiceRecorderSimplifiedCoding/Audios in the phone storage
+        /**In the lines below, we create a directory named VoiceRecorderSimplifiedCoding/Audios in the phone storage
          * and the audios are being stored in the Audios folder **/
         File root = android.os.Environment.getExternalStorageDirectory();
         File file = new File(root.getAbsolutePath() + "/VoiceRecorderSimplifiedCoding/Audios");
@@ -187,8 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             file.mkdirs();
         }
 
-        fileName =  root.getAbsolutePath() + "/VoiceRecorderSimplifiedCoding/Audios/" +
-                String.valueOf(System.currentTimeMillis() + ".mp3");
+        fileName =  root.getAbsolutePath() + "/VoiceRecorderSimplifiedCoding/Audios/" + String.valueOf(System.currentTimeMillis() + ".mp3");
         Log.d("filename",fileName);
         mRecorder.setOutputFile(fileName);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
@@ -216,9 +194,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         mPlayer = null;
         //showing the play button
-        imageViewPlay.setImageResource(R.drawable.ic_mic);
+        imageViewPlay.setImageResource(R.drawable.ic_play);
         chronometer.stop();
     }
+
 
     private void prepareforStop() {
         TransitionManager.beginDelayedTransition(linearLayoutRecorder);
@@ -245,8 +224,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void startPlaying() {
         mPlayer = new MediaPlayer();
+        Log.d("instartPlaying",fileName);
         try {
-//fileName is global string. it contains the Uri to the recently recorded audio.
             mPlayer.setDataSource(fileName);
             mPlayer.prepare();
             mPlayer.start();
@@ -254,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.e("LOG_TAG", "prepare() failed");
         }
         //making the imageview pause button
-        imageViewPlay.setImageResource(R.drawable.ic_mic);
+        imageViewPlay.setImageResource(R.drawable.ic_pause);
 
         seekBar.setProgress(lastProgress);
         mPlayer.seekTo(lastProgress);
@@ -266,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                imageViewPlay.setImageResource(R.drawable.ic_mic);
+                imageViewPlay.setImageResource(R.drawable.ic_play);
                 isPlaying = false;
                 chronometer.stop();
             }
@@ -312,4 +291,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         mHandler.postDelayed(runnable, 100);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.list_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.item_list:
+                Intent intent = new Intent(this, RecordingListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+
+    }
+
+
+
 }

@@ -39,13 +39,35 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        setUpData(holder,position);
 
+        setUpData(holder,position);
     }
 
     @Override
     public int getItemCount() {
         return recordingArrayList.size();
+    }
+
+
+    private void setUpData(ViewHolder holder, int position) {
+
+        Recording recording = recordingArrayList.get(position);
+        holder.textViewName.setText(recording.getFileName());
+
+        if( recording.isPlaying() ){
+            holder.imageViewPlay.setImageResource(R.drawable.ic_pause);
+            TransitionManager.beginDelayedTransition((ViewGroup) holder.itemView);
+            holder.seekBar.setVisibility(View.VISIBLE);
+            holder.seekUpdation(holder);
+        }else{
+            holder.imageViewPlay.setImageResource(R.drawable.ic_play);
+            TransitionManager.beginDelayedTransition((ViewGroup) holder.itemView);
+            holder.seekBar.setVisibility(View.GONE);
+        }
+
+
+        holder.manageSeekBar(holder);
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -88,12 +110,10 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                         }
 
                     }else {
-
                         startPlaying(recording,position);
                         recording.setPlaying(true);
                         seekBar.setMax(mPlayer.getDuration());
                         Log.d("isPlayin","False");
-
                         notifyItemChanged(position);
                         last_index = position;
                     }
@@ -181,25 +201,6 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                 }
             });
         }
-
-    }
-    private void setUpData(ViewHolder holder, int position) {
-
-        Recording recording = recordingArrayList.get(position);
-        holder.textViewName.setText(recording.getFileName());
-
-        if( recording.isPlaying() ){
-            holder.imageViewPlay.setImageResource(R.drawable.ic_mic);
-            TransitionManager.beginDelayedTransition((ViewGroup) holder.itemView);
-            holder.seekBar.setVisibility(View.VISIBLE);
-            holder.seekUpdation(holder);
-        }else{
-            holder.imageViewPlay.setImageResource(R.drawable.ic_mic);
-            TransitionManager.beginDelayedTransition((ViewGroup) holder.itemView);
-            holder.seekBar.setVisibility(View.GONE);
-        }
-
-        holder.manageSeekBar(holder);
 
     }
 }
